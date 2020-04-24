@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "836775188282",
+    "firebase_url": "https://hopworld-91932.firebaseio.com",
+    "project_id": "hopworld-91932",
+    "storage_bucket": "hopworld-91932.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836775188282:android:6c2909099ca3d328b4a203",
+        "android_client_info": {
+          "package_name": "com.jfalck.hopworld"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836775188282-kjc77incokmar3s5i42pf7kt2qhu0va5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jfalck.hopworld",
+            "certificate_hash": "b233d758c3dd6ae594b654edfe1e86f363e5622e"
+          }
+        },
+        {
+          "client_id": "836775188282-1694jmkibtm78hikkq72e32g87crjldk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAj42T7puiAuVhs0R302Pgmu7NmyeCZfIg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "836775188282-e312uv1ceeha4f01im14vddt736j43i1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
