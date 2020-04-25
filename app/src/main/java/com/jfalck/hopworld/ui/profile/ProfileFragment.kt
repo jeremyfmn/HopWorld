@@ -42,6 +42,7 @@ class ProfileFragment : Fragment() {
             GoogleSignUtils.getAccount(context)?.let { account ->
                 tv_account_name.text = account.displayName
                 Glide.with(this).load(account.photoUrl.toString()).into(iv_avatar_image)
+                iv_avatar_image.clipToOutline = true
                 initChips()
             }
         }

@@ -46,8 +46,8 @@ class HomeFragment : Fragment(), BeerSuggestionAdapter.IOnItemClick {
         initView()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         getBeers()
     }
 
