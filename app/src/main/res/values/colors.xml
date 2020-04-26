@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#C67D00</color>
     <color name="colorAccent">#D35600</color>
     <color name="welcome_background_mask">#66000000</color>
+    <color name="dark_background_color">#2E2E2E</color>
 </resources>

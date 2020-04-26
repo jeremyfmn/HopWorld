@@ -1,5 +1,6 @@
 package com.jfalck.hopworld
 
+import android.util.Patterns
 import android.view.View
 
 fun View.makeGone() {
@@ -13,3 +14,5 @@ fun View.makeVisible() {
 fun View.makeInvisible() {
     visibility = View.INVISIBLE
 }
+
+fun String.isEmailValid() = Patterns.EMAIL_ADDRESS.matcher(this).matches()

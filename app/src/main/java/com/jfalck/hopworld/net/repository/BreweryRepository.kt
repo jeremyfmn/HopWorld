@@ -18,7 +18,7 @@ class BreweryRepository {
 
     lateinit var userAccount: GoogleSignInAccount
 
-    lateinit var firebaseUser: FirebaseUser
+    var firebaseUser: FirebaseUser? = null
 
     var firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
 
@@ -46,13 +46,13 @@ class BreweryRepository {
 
     fun saveLikedBeers(beerTypes: List<BeerTypes>) {
         val user = hashMapOf(
-            "id" to firebaseUser.uid,
-            "email" to firebaseUser.email,
-            "givenName" to firebaseUser.displayName,
+            "id" to firebaseUser?.uid,
+            "email" to firebaseUser?.email,
+            "givenName" to firebaseUser?.displayName,
             "beersLiked" to beerTypes.map { it.id }
         )
 
-        firebaseUser.uid.let { id ->
+        firebaseUser?.uid?.let { id ->
             firebaseDB.collection("users").document(id)
                 .set(user)
                 .addOnSuccessListener {
@@ -65,15 +65,17 @@ class BreweryRepository {
 
     fun getBeerTypesLiked(): Observable<List<Int>> {
         return Observable.create { emitter ->
-            firebaseDB.collection("users").document(firebaseUser.uid)
-                .addSnapshotListener { snapshot, firebaseFirestoreException ->
-                    val result = snapshot?.data?.get("beersLiked") as List<Int>?
-                    if (result == null || firebaseFirestoreException != null) {
-                        emitter.onError(Throwable("data retrieved is null"))
-                    } else {
-                        emitter.onNext(result)
+            firebaseUser?.uid?.let { id ->
+                firebaseDB.collection("users").document(id)
+                    .addSnapshotListener { snapshot, firebaseFirestoreException ->
+                        val result = snapshot?.data?.get("beersLiked") as List<Int>?
+                        if (result == null || firebaseFirestoreException != null) {
+                            emitter.onError(Throwable("data retrieved is null"))
+                        } else {
+                            emitter.onNext(result)
+                        }
                     }
-                }
+            }
         }
     }
 }

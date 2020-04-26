@@ -9,6 +9,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.jfalck.hopworld.ui.login.LoginActivity
 import com.jfalck.hopworld.utils.LoginUtils
 import kotlinx.android.synthetic.main.activity_main.*
 

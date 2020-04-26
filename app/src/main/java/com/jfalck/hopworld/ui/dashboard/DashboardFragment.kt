@@ -11,21 +11,19 @@ import kotlinx.android.synthetic.main.fragment_dashboard.*
 
 class DashboardFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
+    private val dashboardViewModel: DashboardViewModel by lazy {
+        ViewModelProvider(this).get(DashboardViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_dashboard, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_dashboard, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        yt_view.enableBackgroundPlayback(true)
+        lifecycle.addObserver(yt_view)
     }
 
     override fun onDestroy() {

@@ -7,19 +7,31 @@
     <string name="title_profile">Profil</string>
     <string name="title_beer_detail">Détail</string>
 
+    <!--Constants-->
+    <string name="email_regex">"(?:[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"</string>
+    <string name="brewerydb_api_key">fbdb7e778683014180eab139ee138c97</string>
+
+    <!--Facebook constants-->
+    <string name="facebook_app_id">1044374652629019</string>
+    <string name="fb_login_protocol_scheme">fb1044374652629019</string>
+
     <!--Basic strings-->
+    <string name="register">Inscription</string>
+    <string name="login">Connexion</string>
+    <string name="email">Email</string>
+    <string name="signup">M\'inscrire</string>
+    <string name="password">Mot de passe</string>
     <string name="hello_name">Bonjour %s</string>
     <string name="abv">%s°</string>
     <string name="ibu">IBU: %s</string>
     <string name="unknown_ibu">IBU inconnu</string>
     <string name="unknown_abv">Degré inconnu</string>
     <string name="hops">Houblons</string>
-
-    <!--Constants-->
-    <string name="brewerydb_api_key">fbdb7e778683014180eab139ee138c97</string>
-
-    <!--Facebook constants-->
-    <string name="facebook_app_id">1044374652629019</string>
-    <string name="fb_login_protocol_scheme">fb1044374652629019</string>
+    <string name="minimum_characters">6 caractères minimum</string>
+    <string name="password_characters_min_error">Le mot de passe doit contenir au moins %d cafactères</string>
+    <string name="enter_valid_mail_error">Veuillez entrer une adresse email valide</string>
+    <string name="enter_valid_mail_and_password">Veuillez entrer un email et un mot de passe valides</string>
+    <string name="ok">OK</string>
+    <string name="welcome_to_beerworld">Bienvenue sur\nBeerWorld !</string>
 
 </resources>

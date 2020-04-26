@@ -15,7 +15,9 @@ abstract class HopWorldViewModel : ViewModel() {
 
     init {
         Observable.just(App.breweryRepository.firebaseUser).subscribe {
-            firebaseUser.value = it
+            it?.let {
+                firebaseUser.value = it
+            }
         }.let {
             compositeDisposable.add(it)
         }

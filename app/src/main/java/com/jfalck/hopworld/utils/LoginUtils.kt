@@ -2,6 +2,7 @@ package com.jfalck.hopworld.utils
 
 import android.app.Activity
 import android.content.Context
+import android.os.Parcelable
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.AccessToken
@@ -21,11 +22,12 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.GoogleAuthProvider
 import com.jfalck.hopworld.App
 import com.jfalck.hopworld.R
+import com.jfalck.hopworld.ui.login.signup.SignUpFragment
 
 
 class LoginUtils {
 
-    interface IOnLogin {
+    interface IOnLogin: Parcelable {
         fun onLoginSuccess()
         fun onLoginFailed()
     }
@@ -176,6 +178,39 @@ class LoginUtils {
                 LoginManager.getInstance()
                     .logInWithReadPermissions(activity, listOf("public_profile"))
             }
+            App.firebaseAuth.currentUser?.let {
+                listener.onLoginSuccess()
+            }
+        }
+
+        fun registerWithEmailAndPassword(email: String, password: String, listener: IOnLogin) {
+            App.firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(SignUpFragment.TAG, "createUserWithEmail:success")
+                        listener.onLoginSuccess()
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(SignUpFragment.TAG, "createUserWithEmail:failure", task.exception)
+                        listener.onLoginFailed()
+                    }
+                }
+        }
+
+        fun loginWithEmailAndPassword(email: String, password: String, listener: IOnLogin) {
+            App.firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(SignUpFragment.TAG, "loginUserWithEmail:success")
+                        listener.onLoginSuccess()
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(SignUpFragment.TAG, "loginUserWithEmail:failure", task.exception)
+                        listener.onLoginFailed()
+                    }
+                }
         }
     }
 }
