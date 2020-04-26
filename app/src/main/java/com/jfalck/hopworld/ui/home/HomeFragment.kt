@@ -9,40 +9,30 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseUser
 import com.jfalck.hopworld.MainActivity
 import com.jfalck.hopworld.R
 import com.jfalck.hopworld.net.model.Beer
 import com.jfalck.hopworld.ui.home.adapter.BeerSuggestionAdapter
-import com.jfalck.hopworld.utils.GoogleSignUtils
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class HomeFragment : Fragment(), BeerSuggestionAdapter.IOnItemClick {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel: HomeViewModel by lazy {
+        ViewModelProvider(this).get(HomeViewModel::class.java)
+    }
+
     private lateinit var beerSuggestionAdapter: BeerSuggestionAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_home, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_home, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        context?.let { context ->
-            val googleAccount = GoogleSignUtils.getAccount(context)
-            if (googleAccount != null) {
-                text_home.text =
-                    getString(R.string.hello_name, googleAccount.givenName)
-                iv_avatar.clipToOutline = true
-                Glide.with(this).load(googleAccount.photoUrl.toString()).into(iv_avatar)
-            }
-        }
         initView()
     }
 
@@ -52,6 +42,7 @@ class HomeFragment : Fragment(), BeerSuggestionAdapter.IOnItemClick {
     }
 
     private fun initView() {
+        iv_avatar.clipToOutline = true
         context?.let { context ->
             rv_random_beers.layoutManager = LinearLayoutManager(context)
             if (!::beerSuggestionAdapter.isInitialized) {
@@ -66,6 +57,15 @@ class HomeFragment : Fragment(), BeerSuggestionAdapter.IOnItemClick {
                 }
             }
         }
+        homeViewModel.firebaseUser.observeForever {
+            updateUi(it)
+        }
+    }
+
+    private fun updateUi(firebaseUser: FirebaseUser) {
+        text_home.text =
+            getString(R.string.hello_name, firebaseUser.displayName)
+        Glide.with(this).load(firebaseUser.photoUrl.toString()).into(iv_avatar)
     }
 
     private fun getBeers() {
@@ -76,9 +76,7 @@ class HomeFragment : Fragment(), BeerSuggestionAdapter.IOnItemClick {
         }
     }
 
-    override fun onItemClicked(beer: Beer) {
-        HomeFragmentDirections.actionNavigationHomeToNavigationBeerDetail(beer).let { action ->
-            findNavController().navigate(action)
-        }
-    }
+    override fun onItemClicked(beer: Beer) =
+        findNavController()
+            .navigate(HomeFragmentDirections.actionNavigationHomeToNavigationBeerDetail(beer))
 }

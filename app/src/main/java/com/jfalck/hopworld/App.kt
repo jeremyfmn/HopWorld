@@ -1,7 +1,9 @@
 package com.jfalck.hopworld
 
 import android.app.Application
+import com.facebook.FacebookSdk
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import com.jfalck.hopworld.net.repository.BreweryRepository
 import com.jfalck.hopworld.net.service.BreweryService
 import com.jfalck.hopworld.utils.Constants.Companion.BREWERY_API_BASE_URL
@@ -12,9 +14,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 class App : Application() {
 
     companion object {
+
+        val firebaseAuth: FirebaseAuth by lazy {
+            FirebaseAuth.getInstance()
+        }
+
         val breweryService: BreweryService
 
         lateinit var breweryRepository: BreweryRepository
+
+        fun setCurrentUser() =
+            firebaseAuth.currentUser?.let { firebaseUser ->
+                breweryRepository.firebaseUser = firebaseUser
+            }
 
         init {
             val retrofit = Retrofit.Builder()
@@ -30,6 +42,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
+        FacebookSdk.sdkInitialize(applicationContext);
         breweryRepository = BreweryRepository()
         breweryRepository.initDaos(baseContext)
     }

@@ -9,7 +9,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 android {
     signingConfigs {
         release {
-            storeFile file('/Users/jfalck/User/manpower_keystore.keystore')
+            storeFile file('/Users/jfalck/User/hopworld_keystore.keystore')
             storePassword 'Jeremy34'
             keyAlias = 'upload'
             keyPassword 'Jeremy34'
@@ -78,10 +78,10 @@ dependencies {
 
 //    Glide - Used for populating imageViews with an imageUrl
     implementation 'com.github.bumptech.glide:glide:4.11.0'
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
 //    Retrofit - Used for HTTP calls
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
@@ -99,6 +99,9 @@ dependencies {
 
 //    Youtube player
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
+
+//    Facebook Login
+    implementation 'com.facebook.android:facebook-login:5.0.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

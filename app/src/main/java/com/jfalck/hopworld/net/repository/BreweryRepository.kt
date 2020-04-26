@@ -2,7 +2,9 @@ package com.jfalck.hopworld.net.repository
 
 import android.content.Context
 import android.util.Log
+import com.facebook.AccessToken
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jfalck.hopworld.App.Companion.breweryService
 import com.jfalck.hopworld.data.BeerTypes
@@ -15,9 +17,14 @@ import io.reactivex.Observable
 class BreweryRepository {
 
     lateinit var userAccount: GoogleSignInAccount
+
+    lateinit var firebaseUser: FirebaseUser
+
     var firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     val service = breweryService
+
+    lateinit var facebookToken: AccessToken
 
     private lateinit var beerDao: BeerDao
 
@@ -39,14 +46,13 @@ class BreweryRepository {
 
     fun saveLikedBeers(beerTypes: List<BeerTypes>) {
         val user = hashMapOf(
-            "id" to userAccount.id,
-            "email" to userAccount.email,
-            "givenName" to userAccount.givenName,
-            "familyName" to userAccount.familyName,
+            "id" to firebaseUser.uid,
+            "email" to firebaseUser.email,
+            "givenName" to firebaseUser.displayName,
             "beersLiked" to beerTypes.map { it.id }
         )
 
-        userAccount.id?.let { id ->
+        firebaseUser.uid.let { id ->
             firebaseDB.collection("users").document(id)
                 .set(user)
                 .addOnSuccessListener {
@@ -59,17 +65,15 @@ class BreweryRepository {
 
     fun getBeerTypesLiked(): Observable<List<Int>> {
         return Observable.create { emitter ->
-            userAccount.id?.let {
-                firebaseDB.collection("users").document(it)
-                    .addSnapshotListener { snapshot, firebaseFirestoreException ->
-                        val result = snapshot?.data?.get("beersLiked") as List<Int>?
-                        if (result == null || firebaseFirestoreException != null) {
-                            emitter.onError(Throwable("data retrieved is null"))
-                        } else {
-                            emitter.onNext(result)
-                        }
+            firebaseDB.collection("users").document(firebaseUser.uid)
+                .addSnapshotListener { snapshot, firebaseFirestoreException ->
+                    val result = snapshot?.data?.get("beersLiked") as List<Int>?
+                    if (result == null || firebaseFirestoreException != null) {
+                        emitter.onError(Throwable("data retrieved is null"))
+                    } else {
+                        emitter.onNext(result)
                     }
-            }
+                }
         }
     }
 }

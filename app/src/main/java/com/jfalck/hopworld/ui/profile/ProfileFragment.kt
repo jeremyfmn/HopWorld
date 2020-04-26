@@ -12,12 +12,13 @@ import com.google.android.material.chip.Chip
 import com.jfalck.hopworld.R
 import com.jfalck.hopworld.data.BeerTypes
 import com.jfalck.hopworld.makeVisible
-import com.jfalck.hopworld.utils.GoogleSignUtils
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : Fragment() {
 
-    private lateinit var profileViewModel: ProfileViewModel
+    private val profileViewModel: ProfileViewModel by lazy {
+        ViewModelProvider(this).get(ProfileViewModel::class.java)
+    }
 
     private var chips = mutableListOf<Chip>()
 
@@ -30,36 +31,36 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        profileViewModel =
-            ViewModelProvider(this).get(ProfileViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_profile, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_profile, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        context?.let { context ->
-            GoogleSignUtils.getAccount(context)?.let { account ->
-                tv_account_name.text = account.displayName
-                Glide.with(this).load(account.photoUrl.toString()).into(iv_avatar_image)
-                iv_avatar_image.clipToOutline = true
-                initChips()
-            }
-        }
+        initView()
         observeViewModel()
     }
 
+    private fun initView() {
+        profileViewModel.firebaseUser.observeForever { firebaseUser ->
+            tv_account_name.text = firebaseUser.displayName
+            Glide.with(this).load(firebaseUser.photoUrl.toString()).into(iv_avatar_image)
+            iv_avatar_image.clipToOutline = true
+            initChips()
+        }
+    }
+
     private fun initChips() {
-        BeerTypes.values().forEach { beerType ->
-            (layoutInflater.inflate(R.layout.custom_chip, chip_group, false) as Chip).apply {
-                text = beerType.shortName
-                R.style.Widget_MaterialComponents_Chip_Action
-                // necessary to get single selection working
-                isClickable = true
-                isCheckable = true
-                chip_group.addView(this)
-                setOnCheckedChangeListener(checkedChangeListener)
-                chips.add(this)
+        if (chips.size == 0) {
+            BeerTypes.values().forEach { beerType ->
+                (layoutInflater.inflate(R.layout.custom_chip, chip_group, false) as Chip).apply {
+                    text = beerType.shortName
+                    R.style.Widget_MaterialComponents_Chip_Action
+                    // necessary to get single selection working
+                    isClickable = true
+                    isCheckable = true
+                    chip_group.addView(this)
+                    setOnCheckedChangeListener(checkedChangeListener)
+                    chips.add(this)
+                }
             }
         }
     }

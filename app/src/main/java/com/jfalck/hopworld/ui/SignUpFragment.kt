@@ -8,7 +8,7 @@ import android.view.*
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import com.google.firebase.auth.FirebaseAuth
+import com.jfalck.hopworld.App
 import com.jfalck.hopworld.MainActivity
 import com.jfalck.hopworld.R
 import kotlinx.android.synthetic.main.fragment_signup.*
@@ -19,8 +19,6 @@ class SignUpFragment : DialogFragment() {
     companion object {
         const val TAG = "SignUpFragment"
     }
-
-    private val auth = FirebaseAuth.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,22 +52,21 @@ class SignUpFragment : DialogFragment() {
     }
 
     private fun authenticateWithEmailAndPassword(email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                // Sign in success, update UI with the signed-in user's information
-                Log.d(TAG, "createUserWithEmail:success")
-                val user = auth.currentUser
-                context?.startActivity(Intent(context, MainActivity::class.java))
-            } else {
-                // If sign in fails, display a message to the user.
-                Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                Toast.makeText(
-                    context, "Authentication failed.",
-                    Toast.LENGTH_SHORT
-                ).show()
+        App.firebaseAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "createUserWithEmail:success")
+                    val user = App.firebaseAuth.currentUser
+                    context?.startActivity(Intent(context, MainActivity::class.java))
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                    Toast.makeText(
+                        context, "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
-
-            // ...
-        }
     }
 }

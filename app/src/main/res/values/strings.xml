@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BeerWorld</string>
+    <string name="app_name">HopWorld</string>
 
     <!--Fragments titles-->
     <string name="title_home">Accueil</string>
@@ -17,5 +17,9 @@
 
     <!--Constants-->
     <string name="brewerydb_api_key">fbdb7e778683014180eab139ee138c97</string>
+
+    <!--Facebook constants-->
+    <string name="facebook_app_id">1044374652629019</string>
+    <string name="fb_login_protocol_scheme">fb1044374652629019</string>
 
 </resources>

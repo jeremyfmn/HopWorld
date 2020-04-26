@@ -1,15 +1,12 @@
 package com.jfalck.hopworld.ui.home
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.jfalck.hopworld.App
 import com.jfalck.hopworld.net.model.Beer
-import io.reactivex.disposables.CompositeDisposable
+import com.jfalck.hopworld.ui.HopWorldViewModel
 import io.reactivex.schedulers.Schedulers
 
-class HomeViewModel : ViewModel() {
-
-    private val compositeDisposable = CompositeDisposable()
+class HomeViewModel : HopWorldViewModel() {
 
     val beer: MutableLiveData<Beer?> = MutableLiveData()
 
@@ -24,10 +21,5 @@ class HomeViewModel : ViewModel() {
             }?.let {
                 compositeDisposable.add(it)
             }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.dispose()
     }
 }

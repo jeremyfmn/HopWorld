@@ -1,18 +1,15 @@
 package com.jfalck.hopworld.ui.profile
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.jfalck.hopworld.App
 import com.jfalck.hopworld.data.BeerTypes
-import io.reactivex.disposables.CompositeDisposable
+import com.jfalck.hopworld.ui.HopWorldViewModel
 import io.reactivex.schedulers.Schedulers
 
-class ProfileViewModel : ViewModel() {
+class ProfileViewModel : HopWorldViewModel() {
 
     var beerTypesLikedLiveData: MutableLiveData<MutableList<BeerTypes>> =
         MutableLiveData(mutableListOf())
-
-    private val compositeDisposable = CompositeDisposable()
 
     init {
         App.breweryRepository.getBeerTypesLiked().subscribeOn(Schedulers.io())?.onErrorReturnItem(
@@ -38,10 +35,5 @@ class ProfileViewModel : ViewModel() {
             }
             App.breweryRepository.saveLikedBeers(beerTypes.distinct())
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.clear()
     }
 }
