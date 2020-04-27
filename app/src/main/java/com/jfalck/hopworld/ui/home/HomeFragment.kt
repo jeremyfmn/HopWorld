@@ -51,9 +51,10 @@ class HomeFragment : Fragment(), BeerSuggestionAdapter.IOnItemClick {
             rv_random_beers.adapter = beerSuggestionAdapter
         }
         if (beerSuggestionAdapter.itemsList.size != 10) {
-            homeViewModel.beer.observeForever {
+            homeViewModel.beers.observeForever {
                 it?.let {
-                    beerSuggestionAdapter.addBeer(it)
+                    //                    beerSuggestionAdapter.addBeer(it)
+                    beerSuggestionAdapter.itemsList = it
                 }
             }
         }
@@ -70,9 +71,7 @@ class HomeFragment : Fragment(), BeerSuggestionAdapter.IOnItemClick {
 
     private fun getBeers() {
         if (activity is MainActivity) {
-            for (i in 0 until 10) {
-                homeViewModel.getBeer()
-            }
+            homeViewModel.getBeers()
         }
     }
 

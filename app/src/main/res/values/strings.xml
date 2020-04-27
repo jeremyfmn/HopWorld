@@ -33,5 +33,6 @@
     <string name="enter_valid_mail_and_password">Veuillez entrer un email et un mot de passe valides</string>
     <string name="ok">OK</string>
     <string name="welcome_to_beerworld">Bienvenue sur\nBeerWorld !</string>
+    <string name="prefered_type">Type préféré</string>
 
 </resources>

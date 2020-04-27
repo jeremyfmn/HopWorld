@@ -21,6 +21,10 @@ class BeerSuggestionAdapter(
     }
 
     var itemsList: MutableList<Beer> = mutableListOf()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     fun addBeer(beer: Beer) {
         if (!itemsList.contains(beer)) {

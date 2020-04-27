@@ -35,7 +35,9 @@ data class Beer(
     @ColumnInfo(name = "isRetired")
     val isRetired: String?,
     @Ignore
-    val style: BeerStyle?
+    var style: BeerStyle?,
+    @ColumnInfo(name = "beerStyleId")
+    val beerStyleId: Int? = style?.id
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
@@ -50,9 +52,9 @@ data class Beer(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readParcelable(BeerStyle::class.java.classLoader)
-    ) {
-    }
+        parcel.readParcelable(BeerStyle::class.java.classLoader),
+        parcel.readInt()
+    )
 
     //Constructor used by Room
     constructor(
@@ -66,7 +68,8 @@ data class Beer(
         statusDisplay: String?,
         createDate: String?,
         updateDate: String?,
-        isRetired: String?
+        isRetired: String?,
+        beerStyleId: Int?
     ) : this(
         id,
         name,
@@ -79,7 +82,8 @@ data class Beer(
         createDate,
         updateDate,
         isRetired,
-        null
+        null,
+        beerStyleId
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -94,6 +98,7 @@ data class Beer(
         parcel.writeString(createDate)
         parcel.writeString(updateDate)
         parcel.writeString(isRetired)
+        parcel.writeInt(beerStyleId ?: 0)
     }
 
     override fun describeContents(): Int {
@@ -110,113 +115,20 @@ data class Beer(
         }
 
         val DEFAULT =
-            Beer("", null, null, null, null, null, null, null, null, null, null, null)
-    }
-}
-
-data class BeerStyle(
-    val id: Int?,
-    val categoryId: Int?,
-    val name: String?,
-    val shortName: String?,
-    val description: String?,
-    val ibuMin: String?,
-    val ibuMax: String?,
-    val abvMin: String?,
-    val abvMax: String?,
-    val srmMin: String?,
-    val srmMax: String?,
-    val ogMin: String?,
-    val fgMin: String?,
-    val fgMax: String?,
-    val createDate: String?,
-    val updateDate: String?,
-    val category: BeerStyleCategory?
-) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readValue(Int::class.java.classLoader) as? Int,
-        parcel.readValue(Int::class.java.classLoader) as? Int,
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readParcelable(BeerStyleCategory::class.java.classLoader)
-    )
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeValue(id)
-        parcel.writeValue(categoryId)
-        parcel.writeString(name)
-        parcel.writeString(shortName)
-        parcel.writeString(description)
-        parcel.writeString(ibuMin)
-        parcel.writeString(ibuMax)
-        parcel.writeString(abvMin)
-        parcel.writeString(abvMax)
-        parcel.writeString(srmMin)
-        parcel.writeString(srmMax)
-        parcel.writeString(ogMin)
-        parcel.writeString(fgMin)
-        parcel.writeString(fgMax)
-        parcel.writeString(createDate)
-        parcel.writeString(updateDate)
-        parcel.writeParcelable(category, flags)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<BeerStyle> {
-        override fun createFromParcel(parcel: Parcel): BeerStyle {
-            return BeerStyle(parcel)
-        }
-
-        override fun newArray(size: Int): Array<BeerStyle?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
-
-data class BeerStyleCategory(
-    val id: Int?,
-    val name: String?,
-    val createDate: String?
-) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readValue(Int::class.java.classLoader) as? Int,
-        parcel.readString(),
-        parcel.readString()
-    ) {
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeValue(id)
-        parcel.writeString(name)
-        parcel.writeString(createDate)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<BeerStyleCategory> {
-        override fun createFromParcel(parcel: Parcel): BeerStyleCategory {
-            return BeerStyleCategory(parcel)
-        }
-
-        override fun newArray(size: Int): Array<BeerStyleCategory?> {
-            return arrayOfNulls(size)
-        }
+            Beer(
+                "",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            )
     }
 }

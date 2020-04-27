@@ -27,5 +27,4 @@ abstract class HopWorldViewModel : ViewModel() {
         super.onCleared()
         compositeDisposable.dispose()
     }
-
 }

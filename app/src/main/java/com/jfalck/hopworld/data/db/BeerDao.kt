@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.jfalck.hopworld.net.model.Beer
 import io.reactivex.Completable
-import io.reactivex.Flowable
+import io.reactivex.Observable
 
 @Dao
 interface BeerDao {
@@ -16,7 +16,14 @@ interface BeerDao {
      * @return the beer from the table with a specific id.
      */
     @Query("SELECT * FROM beers WHERE id = :id")
-    fun getUserById(id: String): Flowable<Beer>
+    fun getBeerById(id: String): Observable<Beer>
+
+    /**
+     * Get all beers by
+     * @return All the beers stored in the database.
+     */
+    @Query("SELECT * FROM beers")
+    fun getBeers(): Observable<List<Beer>>
 
     /**
      * Insert a user in the database. If the user already exists, replace it.
@@ -26,7 +33,7 @@ interface BeerDao {
     fun insertBeer(beer: Beer): Completable
 
     /**
-     * Delete all users.
+     * Delete all beers.
      */
     @Query("DELETE FROM beers")
     fun deleteAllBeers()

@@ -31,14 +31,28 @@
 
             <TextView
                 android:id="@+id/tv_account_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/iv_edit_profile"
                 app:layout_constraintStart_toEndOf="@id/iv_avatar_image"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Jérémy Falck" />
+
+            <ImageView
+                android:id="@+id/iv_edit_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_edit"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -47,7 +61,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:alpha="0"
             android:orientation="vertical"
             android:padding="10dp"
             android:visibility="gone"
@@ -56,7 +69,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Type préféré" />
+                android:text="@string/prefered_type" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chip_group"

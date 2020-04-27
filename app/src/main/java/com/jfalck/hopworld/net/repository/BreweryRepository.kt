@@ -2,34 +2,33 @@ package com.jfalck.hopworld.net.repository
 
 import android.content.Context
 import android.util.Log
-import com.facebook.AccessToken
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jfalck.hopworld.App.Companion.breweryService
 import com.jfalck.hopworld.data.BeerTypes
 import com.jfalck.hopworld.data.db.BeerDao
 import com.jfalck.hopworld.data.db.BeerDatabase
+import com.jfalck.hopworld.data.db.BeerStyleDao
 import com.jfalck.hopworld.net.model.Beer
+import com.jfalck.hopworld.net.model.BeerStyle
 import com.jfalck.hopworld.net.model.Hop
+import io.reactivex.Completable
 import io.reactivex.Observable
 
 class BreweryRepository {
 
-    lateinit var userAccount: GoogleSignInAccount
-
     var firebaseUser: FirebaseUser? = null
 
-    var firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     val service = breweryService
 
-    lateinit var facebookToken: AccessToken
-
     private lateinit var beerDao: BeerDao
+    private lateinit var beerStyleDao: BeerStyleDao
 
     fun initDaos(context: Context) {
         beerDao = BeerDatabase.getInstance(context).beerDao()
+        beerStyleDao = BeerDatabase.getInstance(context).beerStyleDao()
     }
 
     fun getRandomBeer(): Observable<Beer>? =
@@ -78,4 +77,16 @@ class BreweryRepository {
             }
         }
     }
+
+    fun insertBeer(beer: Beer): Completable =
+        beerDao.insertBeer(beer)
+
+    fun insertBeerStyle(beerStyle: BeerStyle): Completable =
+        beerStyleDao.insertBeerStyle(beerStyle)
+
+    fun getBeerStyleById(id: Int): Observable<BeerStyle> =
+        beerStyleDao.getBeerStyleById(id)
+
+    fun getBeersFromLocalDatabase(): Observable<List<Beer>> =
+        beerDao.getBeers()
 }
