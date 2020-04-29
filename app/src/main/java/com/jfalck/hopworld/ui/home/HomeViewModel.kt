@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.jfalck.hopworld.App
 import com.jfalck.hopworld.net.model.Beer
+import com.jfalck.hopworld.net.model.BeerDetail
 import com.jfalck.hopworld.net.model.BeerStyle
 import com.jfalck.hopworld.net.model.BeerStyle.CREATOR.DEFAULT
 import com.jfalck.hopworld.ui.HopWorldViewModel
@@ -51,6 +52,7 @@ class HomeViewModel : HopWorldViewModel() {
                 ?.subscribe { newBeer ->
                     if (newBeer != null && newBeer != Beer.DEFAULT) {
                         saveBeerToDatabase(newBeer)
+                        getBeerDetail(newBeer.id)
                         val newBeerList = beers.value
                         newBeerList?.add(newBeer)
                         beers.postValue(newBeerList)
@@ -82,5 +84,15 @@ class HomeViewModel : HopWorldViewModel() {
         }).let {
             compositeDisposable.add(it)
         }
+    }
+
+    private fun getBeerDetail(beerId: String) {
+        App.breweryRepository.getBeerDetail(beerId)?.subscribeOn(Schedulers.io())
+            ?.onErrorReturnItem(BeerDetail.DEFAULT)
+            ?.subscribe {
+
+            }?.let {
+                compositeDisposable.add(it)
+            }
     }
 }

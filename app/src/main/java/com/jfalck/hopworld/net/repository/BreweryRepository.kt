@@ -8,8 +8,10 @@ import com.jfalck.hopworld.App.Companion.breweryService
 import com.jfalck.hopworld.data.BeerTypes
 import com.jfalck.hopworld.data.db.BeerDao
 import com.jfalck.hopworld.data.db.BeerDatabase
+import com.jfalck.hopworld.data.db.BeerDetailDao
 import com.jfalck.hopworld.data.db.BeerStyleDao
 import com.jfalck.hopworld.net.model.Beer
+import com.jfalck.hopworld.net.model.BeerDetail
 import com.jfalck.hopworld.net.model.BeerStyle
 import com.jfalck.hopworld.net.model.Hop
 import io.reactivex.Completable
@@ -21,14 +23,16 @@ class BreweryRepository {
 
     private var firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    val service = breweryService
+    private val service = breweryService
 
     private lateinit var beerDao: BeerDao
     private lateinit var beerStyleDao: BeerStyleDao
+    private lateinit var beerDetailDao: BeerDetailDao
 
     fun initDaos(context: Context) {
         beerDao = BeerDatabase.getInstance(context).beerDao()
         beerStyleDao = BeerDatabase.getInstance(context).beerStyleDao()
+        beerDetailDao = BeerDatabase.getInstance(context).beerDetailDao()
     }
 
     fun getRandomBeer(): Observable<Beer>? =
@@ -89,4 +93,21 @@ class BreweryRepository {
 
     fun getBeersFromLocalDatabase(): Observable<List<Beer>> =
         beerDao.getBeers()
+
+    fun getBeerDetail(beerId: String): Observable<BeerDetail> =
+        service.getBeerDetails(beerId).map {
+            val beerDetail = it.data
+            insertBeerDetail(beerDetail)
+            beerDetail
+        }
+
+    private fun insertBeerDetail(beerDetail: BeerDetail) =
+        beerDetailDao.insertBeerDetail(beerDetail)
+
+    fun clearDatabase(): Observable<Boolean> =
+        Observable.create<Boolean> {
+            beerDao.deleteAllBeers()
+            beerStyleDao.deleteAllBeerStyles()
+            beerDetailDao.deleteAllBeerDetails()
+        }
 }

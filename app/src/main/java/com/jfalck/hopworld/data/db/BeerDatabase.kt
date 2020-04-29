@@ -5,16 +5,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.jfalck.hopworld.net.model.Beer
+import com.jfalck.hopworld.net.model.BeerDetail
 import com.jfalck.hopworld.net.model.BeerStyle
 
 /**
  * The Room database that contains the Users table
  */
-@Database(entities = [Beer::class, BeerStyle::class], version = 1)
+@Database(entities = [Beer::class, BeerStyle::class, BeerDetail::class], version = 1)
 abstract class BeerDatabase : RoomDatabase() {
 
     abstract fun beerDao(): BeerDao
     abstract fun beerStyleDao(): BeerStyleDao
+    abstract fun beerDetailDao(): BeerDetailDao
 
     companion object {
 
