@@ -37,14 +37,23 @@ class BreweryRepository {
 
     fun getRandomBeer(): Observable<Beer>? =
         breweryService.getRandomBeer().map {
-            val beer = it.data
-            beerDao.insertBeer(beer)
-            beer
+            it.data?.let { beer ->
+                beerDao.insertBeer(beer)
+                beer
+            }
+        }
+
+    fun getBeerDetail(beerId: String): Observable<BeerDetail> =
+        service.getBeerDetails(beerId).map {
+            it.data?.let { beerDetail ->
+                insertBeerDetail(beerDetail)
+                beerDetail
+            }
         }
 
     fun getHops(id: String): Observable<List<Hop>>? =
         breweryService.getBeerHops(id).map {
-            it.data
+            it.data ?: listOf()
         }
 
     fun saveLikedBeers(beerTypes: List<BeerTypes>) {
@@ -71,7 +80,7 @@ class BreweryRepository {
             firebaseUser?.uid?.let { id ->
                 firebaseDB.collection("users").document(id)
                     .addSnapshotListener { snapshot, firebaseFirestoreException ->
-                        val result = snapshot?.data?.get("beersLiked") as List<Int>?
+                        val result = snapshot?.data?.get("beersLiked") as? List<Int>?
                         if (result == null || firebaseFirestoreException != null) {
                             emitter.onError(Throwable("data retrieved is null"))
                         } else {
@@ -94,18 +103,11 @@ class BreweryRepository {
     fun getBeersFromLocalDatabase(): Observable<List<Beer>> =
         beerDao.getBeers()
 
-    fun getBeerDetail(beerId: String): Observable<BeerDetail> =
-        service.getBeerDetails(beerId).map {
-            val beerDetail = it.data
-            insertBeerDetail(beerDetail)
-            beerDetail
-        }
-
     private fun insertBeerDetail(beerDetail: BeerDetail) =
-        beerDetailDao.insertBeerDetail(beerDetail)
+        beerDetailDao.insertBeerDetail(beerDetail).subscribe {}
 
     fun clearDatabase(): Observable<Boolean> =
-        Observable.create<Boolean> {
+        Observable.create {
             beerDao.deleteAllBeers()
             beerStyleDao.deleteAllBeerStyles()
             beerDetailDao.deleteAllBeerDetails()

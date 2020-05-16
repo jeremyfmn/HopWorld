@@ -19,7 +19,7 @@ interface BreweryService {
 
     @GET("beer/{beerId}")
     fun getBeerDetails(
-        @Path("beerId") id: String,
+        @Path("beerId") beerId: String,
         @Query("key") key: String = BREWERY_API_KEY
     ): Observable<BreweryDBData<BeerDetail>>
 

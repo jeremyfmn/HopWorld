@@ -1,6 +1,6 @@
 package com.jfalck.hopworld.ui.home.beerdetail
 
-import androidx.lifecycle.LiveData
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jfalck.hopworld.App
@@ -17,25 +17,17 @@ class BeerDetailViewModel : ViewModel() {
     val beerDetail: MutableLiveData<BeerDetail> = MutableLiveData()
 
     fun getHops(beerId: String) {
-        App.breweryRepository.getHops(beerId)?.subscribeOn(Schedulers.io())?.onErrorReturnItem(
-            listOf()
-        )?.subscribe {
-            hops.postValue(it)
-        }?.let {
-            compositeDisposable.add(it)
-        }
+        App.breweryRepository.getHops(beerId)?.subscribeOn(Schedulers.io())?.subscribe(
+            { hops.postValue(it) },
+            { Log.e("Brewery", it.message) }
+        )?.let { compositeDisposable.add(it) }
     }
 
-    fun getBeerDetail(beerId: String): LiveData<BeerDetail> {
-        val liveData = MutableLiveData<BeerDetail>()
-        App.breweryRepository.getBeerDetail(beerId)?.subscribeOn(Schedulers.io())
-            ?.onErrorReturnItem(BeerDetail.DEFAULT)
-            ?.subscribe {
-                liveData.postValue(it)
-            }?.let {
-                compositeDisposable.add(it)
-            }
-        return liveData
+    fun getBeerDetail(beerId: String) {
+        App.breweryRepository.getBeerDetail(beerId).subscribeOn(Schedulers.io())?.subscribe(
+            { beerDetail.postValue(it) },
+            { Log.e("Brewery", it.message) }
+        )?.let { compositeDisposable.add(it) }
     }
 
     override fun onCleared() {

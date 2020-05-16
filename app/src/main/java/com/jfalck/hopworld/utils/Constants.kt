@@ -6,6 +6,6 @@ class Constants {
         const val BREWERY_API_BASE_URL = "https://sandbox-api.brewerydb.com/v2/"
         const val BREWERY_API_KEY = "fbdb7e778683014180eab139ee138c97"
 
-        const val SIMPLE_FADE_DURATION = 100L
+        const val SIMPLE_FADE_DURATION = 250L
     }
 }

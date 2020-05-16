@@ -29,9 +29,9 @@ data class BeerDetail(
     @ColumnInfo(name = "styleId")
     val styleId: Int?,
     @ColumnInfo(name = "isOrganic")
-    val isOrganic: Int?,
+    val isOrganic: String?,
     @ColumnInfo(name = "isRetired")
-    val isRetired: Int?,
+    val isRetired: String?,
     @Ignore
     val labels: Labels?,
     @ColumnInfo(name = "status")
@@ -61,8 +61,8 @@ data class BeerDetail(
         srmId: Int,
         availableId: Int,
         styleId: Int,
-        isOrganic: Int,
-        isRetired: Int,
+        isOrganic: String,
+        isRetired: String,
         status: String,
         statusDisplay: String,
         createDate: String,

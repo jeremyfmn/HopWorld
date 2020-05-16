@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +14,7 @@ import com.jfalck.hopworld.makeGone
 import com.jfalck.hopworld.makeVisible
 import com.jfalck.hopworld.net.model.Beer
 import com.jfalck.hopworld.net.model.BeerDetail
+import com.jfalck.hopworld.net.model.Hop
 import com.jfalck.hopworld.ui.home.adapter.HopsAdapter
 import kotlinx.android.synthetic.main.beer_detail_fragment.*
 
@@ -40,27 +40,33 @@ class BeerDetailFragment : Fragment() {
     }
 
     private fun initView() {
+
+        initHopsAdapter()
+
         beer = args.beer
         beer_name.text = beer.name
-        tv_style_title.text = beer.style?.name
 
-        beerDetailViewModel.hops.observeForever {
-            val filteredList = it.filter { hop -> hop.name != null }
-            hopsAdapter.itemsList = filteredList
-            if (filteredList.isNullOrEmpty()) {
-                hops_title_container.makeGone()
-                rv_hops.makeGone()
-            } else {
-                hops_title_container.makeVisible()
-                rv_hops.makeVisible()
-            }
-        }
+        beerDetailViewModel.hops.observeForever(this::updateHopsView)
+        beerDetailViewModel.beerDetail.observeForever(this::initViewWithBeerDetail)
+
         beerDetailViewModel.getHops(beer.id)
+        beerDetailViewModel.getBeerDetail(beer.id)
+    }
 
-        beerDetailViewModel.getBeerDetail(beer.id).observe(requireActivity(), Observer {
-            initViewWithBeerDetail(it)
-        })
+    private fun updateHopsView(hops: List<Hop>) {
+        val filteredList = hops.filter { hop -> hop.name != null }
+        hopsAdapter.itemsList = filteredList
+        if (filteredList.isNullOrEmpty()) {
+            hops_title_container.makeGone()
+            rv_hops.makeGone()
+        } else {
+            hops_title_container.makeVisible()
+            rv_hops.makeVisible()
+        }
 
+    }
+
+    private fun initHopsAdapter() {
         context?.let { context ->
             rv_hops.layoutManager = LinearLayoutManager(context)
             if (!::hopsAdapter.isInitialized) {
@@ -71,8 +77,20 @@ class BeerDetailFragment : Fragment() {
     }
 
     private fun initViewWithBeerDetail(beerDetail: BeerDetail) {
-        tv_description.text = beerDetail.description ?: beer.style?.description
-        tv_description.fadeIn()
+        beerDetail.description.let {
+            if (!it.isNullOrEmpty()) {
+                tv_description.text = beerDetail.description
+                description_title_container.fadeIn()
+                tv_description.fadeIn()
+            }
+        }
+        beer.style?.description.let {
+            if (!it.isNullOrEmpty()) {
+                tv_style_description.text = it
+                style_description_title_container.fadeIn()
+                tv_style_description.fadeIn()
+            }
+        }
     }
 
 }
