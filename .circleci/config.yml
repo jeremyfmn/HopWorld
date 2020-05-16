@@ -1,0 +1,16 @@
+version: 2.1
+
+orbs:
+  android: circleci/android@0.2.0
+
+jobs:
+  build:
+    executor: android/android
+
+    steps:
+      - checkout
+      - run: touch ~/keystore.jks
+      - run: echo $ENCODED_KEYSTORE | base64 --decode >> ~/keystore.jks
+      - run: echo 'export KEYSTORE=~/keystore.jks' >> $BASH_ENV
+      - run:
+          command: ./gradlew bundleRelease
