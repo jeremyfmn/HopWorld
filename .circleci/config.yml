@@ -4,7 +4,7 @@ orbs:
   android: circleci/android@0.2.0
 
 jobs:
-  build:
+  buildRelease:
     executor: android/android
 
     steps:
@@ -14,3 +14,29 @@ jobs:
       - run: echo 'export KEYSTORE=~/keystore.jks' >> $BASH_ENV
       - run:
           command: ./gradlew bundleRelease
+
+  buildDebug:
+    executor: android/android
+
+    steps:
+      - checkout
+      - run:
+          command: ./gradlew bundleDebug
+
+workflows:
+  version: 2
+  build-debug:
+    jobs:
+      - buildDebug:
+          filters:
+            branches:
+              only:
+                - /(feature\/).*/
+                - develop
+  build-release:
+    jobs:
+      - buildRelease:
+          filters:
+            branches:
+              only:
+                - master
