@@ -8,8 +8,13 @@
     <string name="title_beer_detail">Détail</string>
 
     <!--Constants-->
-    <string name="email_regex">"(?:[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"</string>
     <string name="brewerydb_api_key">fbdb7e778683014180eab139ee138c97</string>
+    <string name="admob_id">ca-app-pub-2297732968203269~6284784399</string>
+    <string name="admob_test_device_id">962B9A2ABBB9E765AA47855BF5D93E23</string>
+
+    <!--Ads ids-->
+    <string name="admob_test_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_1_id">ca-app-pub-2297732968203269/9086686481</string>
 
     <!--Facebook constants-->
     <string name="facebook_app_id">1044374652629019</string>

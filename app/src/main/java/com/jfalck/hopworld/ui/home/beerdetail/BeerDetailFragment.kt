@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.ads.AdRequest
 import com.jfalck.hopworld.R
 import com.jfalck.hopworld.fadeIn
 import com.jfalck.hopworld.makeGone
@@ -51,6 +52,12 @@ class BeerDetailFragment : Fragment() {
 
         beerDetailViewModel.getHops(beer.id)
         beerDetailViewModel.getBeerDetail(beer.id)
+
+        loadAdView()
+    }
+
+    private fun loadAdView() {
+        adView.loadAd(AdRequest.Builder().build())
     }
 
     private fun updateHopsView(hops: List<Hop>) {

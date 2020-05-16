@@ -2,6 +2,8 @@ package com.jfalck.hopworld
 
 import android.app.Application
 import com.facebook.FacebookSdk
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.jfalck.hopworld.net.repository.BreweryRepository
@@ -42,8 +44,20 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
-        FacebookSdk.sdkInitialize(applicationContext);
+        FacebookSdk.sdkInitialize(applicationContext)
+        initializeAdMob()
         breweryRepository = BreweryRepository()
         breweryRepository.initDaos(baseContext)
+    }
+
+    private fun initializeAdMob() {
+        MobileAds.initialize(this) {
+            //TODO("Not yet implemented")
+        }
+        RequestConfiguration.Builder()
+            .setTestDeviceIds(listOf(getString(R.string.admob_test_device_id)))
+            .build().let { requestConfiguration ->
+                MobileAds.setRequestConfiguration(requestConfiguration)
+            }
     }
 }
