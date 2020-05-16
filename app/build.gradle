@@ -10,10 +10,10 @@ apply plugin: 'com.google.firebase.firebase-perf'
 android {
     signingConfigs {
         release {
-            storeFile file('/Users/jfalck/User/hopworld_keystore.keystore')
-            storePassword 'Jeremy34'
-            keyAlias = 'upload'
-            keyPassword 'Jeremy34'
+            storeFile file(System.getenv("KEYSTORE") ?: '/Users/jfalck/User/hopworld_keystore.keystore')
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
         }
     }
 
@@ -36,7 +36,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
         }
     }
 
