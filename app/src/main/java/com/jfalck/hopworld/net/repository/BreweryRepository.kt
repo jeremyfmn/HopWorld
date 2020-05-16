@@ -8,8 +8,10 @@ import com.jfalck.hopworld.App.Companion.breweryService
 import com.jfalck.hopworld.data.BeerTypes
 import com.jfalck.hopworld.data.db.BeerDao
 import com.jfalck.hopworld.data.db.BeerDatabase
+import com.jfalck.hopworld.data.db.BeerDetailDao
 import com.jfalck.hopworld.data.db.BeerStyleDao
 import com.jfalck.hopworld.net.model.Beer
+import com.jfalck.hopworld.net.model.BeerDetail
 import com.jfalck.hopworld.net.model.BeerStyle
 import com.jfalck.hopworld.net.model.Hop
 import io.reactivex.Completable
@@ -21,26 +23,37 @@ class BreweryRepository {
 
     private var firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    val service = breweryService
+    private val service = breweryService
 
     private lateinit var beerDao: BeerDao
     private lateinit var beerStyleDao: BeerStyleDao
+    private lateinit var beerDetailDao: BeerDetailDao
 
     fun initDaos(context: Context) {
         beerDao = BeerDatabase.getInstance(context).beerDao()
         beerStyleDao = BeerDatabase.getInstance(context).beerStyleDao()
+        beerDetailDao = BeerDatabase.getInstance(context).beerDetailDao()
     }
 
     fun getRandomBeer(): Observable<Beer>? =
         breweryService.getRandomBeer().map {
-            val beer = it.data
-            beerDao.insertBeer(beer)
-            beer
+            it.data?.let { beer ->
+                beerDao.insertBeer(beer)
+                beer
+            }
+        }
+
+    fun getBeerDetail(beerId: String): Observable<BeerDetail> =
+        service.getBeerDetails(beerId).map {
+            it.data?.let { beerDetail ->
+                insertBeerDetail(beerDetail)
+                beerDetail
+            }
         }
 
     fun getHops(id: String): Observable<List<Hop>>? =
         breweryService.getBeerHops(id).map {
-            it.data
+            it.data ?: listOf()
         }
 
     fun saveLikedBeers(beerTypes: List<BeerTypes>) {
@@ -67,7 +80,7 @@ class BreweryRepository {
             firebaseUser?.uid?.let { id ->
                 firebaseDB.collection("users").document(id)
                     .addSnapshotListener { snapshot, firebaseFirestoreException ->
-                        val result = snapshot?.data?.get("beersLiked") as List<Int>?
+                        val result = snapshot?.data?.get("beersLiked") as? List<Int>?
                         if (result == null || firebaseFirestoreException != null) {
                             emitter.onError(Throwable("data retrieved is null"))
                         } else {
@@ -89,4 +102,14 @@ class BreweryRepository {
 
     fun getBeersFromLocalDatabase(): Observable<List<Beer>> =
         beerDao.getBeers()
+
+    private fun insertBeerDetail(beerDetail: BeerDetail) =
+        beerDetailDao.insertBeerDetail(beerDetail).subscribe {}
+
+    fun clearDatabase(): Observable<Boolean> =
+        Observable.create {
+            beerDao.deleteAllBeers()
+            beerStyleDao.deleteAllBeerStyles()
+            beerDetailDao.deleteAllBeerDetails()
+        }
 }

@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.jfalck.hopworld.R
 import com.jfalck.hopworld.data.BeerTypes
-import com.jfalck.hopworld.makeVisible
+import com.jfalck.hopworld.fadeIn
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : Fragment() {
@@ -72,17 +72,7 @@ class ProfileFragment : Fragment() {
                 chip.isChecked = beerTypes.contains(BeerTypes.values()[index])
                 chip.setOnCheckedChangeListener(checkedChangeListener)
             }
-            show(favorite_beers_container)
-        }
-    }
-
-    private fun show(view: View) {
-        if (view.visibility == View.GONE) {
-            view.apply {
-                alpha = 0f
-                makeVisible()
-                animate().alpha(1f).setDuration(300).setListener(null)
-            }
+            favorite_beers_container.fadeIn()
         }
     }
 }

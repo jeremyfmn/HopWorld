@@ -1,6 +1,7 @@
 package com.jfalck.hopworld.net.service
 
 import com.jfalck.hopworld.net.model.Beer
+import com.jfalck.hopworld.net.model.BeerDetail
 import com.jfalck.hopworld.net.model.BreweryDBData
 import com.jfalck.hopworld.net.model.Hop
 import com.jfalck.hopworld.utils.Constants.Companion.BREWERY_API_KEY
@@ -15,6 +16,12 @@ interface BreweryService {
     fun getRandomBeer(
         @Query("key") key: String = BREWERY_API_KEY
     ): Observable<BreweryDBData<Beer>>
+
+    @GET("beer/{beerId}")
+    fun getBeerDetails(
+        @Path("beerId") beerId: String,
+        @Query("key") key: String = BREWERY_API_KEY
+    ): Observable<BreweryDBData<BeerDetail>>
 
     @GET("beer/{id}/hops")
     fun getBeerHops(
