@@ -21,8 +21,8 @@ class LoginFragment :
     override fun initView() {
         super.initView()
         bt_signin.setOnClickListener {
-            val email = et_email.editText?.text?.toString()
-            val password = et_password.editText?.text?.toString()
+            val email = et_login_email.editText?.text?.toString()
+            val password = et_login_password.editText?.text?.toString()
             if (!email.isNullOrEmpty() && !password.isNullOrEmpty()) {
                 LoginUtils.loginWithEmailAndPassword(email, password, loginListener)
             }
