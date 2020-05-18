@@ -1,37 +1,67 @@
-version: 2.1
-
-orbs:
-  android: circleci/android@0.2.0
-
+---
 jobs:
-  buildRelease:
-    executor: android/android
-
-    steps:
-      - checkout
-      - run: touch ~/keystore.jks
-      - run: echo $ENCODED_KEYSTORE | base64 --decode >> ~/keystore.jks
-      - run: echo 'export KEYSTORE=~/keystore.jks' >> $BASH_ENV
-      - run:
-          command: ./gradlew bundleRelease
-
   buildDebug:
     executor: android/android
-
     steps:
       - checkout
       - run:
-          command: ./gradlew bundleDebug
-
+          command: "./gradlew assembleDebug"
+  buildRelease:
+    executor: android/android
+    steps:
+      - checkout
+      - run: "touch ~/keystore.jks"
+      - run: "echo $ENCODED_KEYSTORE | base64 --decode >> ~/keystore.jks"
+      - run: "echo 'export KEYSTORE=~/keystore.jks' >> $BASH_ENV"
+      - run:
+          command: "./gradlew bundleRelease"
+  bundleDebug:
+    executor: android/android
+    steps:
+      - checkout
+      - run:
+          command: "./gradlew bundleDebug"
+  testInstrumented:
+    docker:
+      - image: "circleci/android:api-28-alpha"
+    steps:
+      - checkout
+      - run:
+          command: |
+            ./gradlew :app:assembleDebug
+            ./gradlew :app:assembleDebugAndroidTest
+          name: "Build debug APK"
+      - run:
+          command: "echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json"
+          name: "Store Google Service Account"
+      - run:
+          command: |
+            sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+          name: "Authorize gcloud and set config defaults"
+      - run:
+          command: |
+            sudo gcloud firebase test android run \
+              --app <local_server_path>/<app_apk>.apk \
+              --test <local_server_path>/<app_test_apk>.apk \
+              --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
+          name: "Test with Firebase Test Lab"
+      - run:
+          command: |
+            sudo pip install -U crcmod
+            sudo gsutil -m cp -r -U `sudo gsutil ls gs://[BUCKET_NAME]/[OBJECT_NAME] | tail -1` ${CIRCLE_ARTIFACTS}/ | true
+          name: "Install gsutil dependency and copy test results data"
+orbs:
+  android: circleci/android@0.2.0
+version: 2.1
 workflows:
-  version: 2
   build-debug:
     jobs:
-      - buildDebug:
+      - testInstrumented:
           filters:
             branches:
               only:
-                - develop
+                - /(feature\/).*/
   build-release:
     jobs:
       - buildRelease:
@@ -39,3 +69,11 @@ workflows:
             branches:
               only:
                 - master
+  bundle-debug:
+    jobs:
+      - bundleDebug:
+          filters:
+            branches:
+              only:
+                - develop
+  version: 2
