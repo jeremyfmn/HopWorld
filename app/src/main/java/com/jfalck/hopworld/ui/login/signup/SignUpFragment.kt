@@ -26,8 +26,8 @@ class SignUpFragment :
     override fun initView() {
         super.initView()
         bt_signup.setOnClickListener {
-            val email = et_email.editText?.text?.toString()
-            val password = et_password.editText?.text?.toString()
+            val email = et_signup_email.editText?.text?.toString()
+            val password = et_signup_password.editText?.text?.toString()
             if (email != null &&
                 password != null &&
                 email.isEmailValid() &&
@@ -48,13 +48,13 @@ class SignUpFragment :
     }
 
     private fun addFieldsListeners() {
-        et_password.editText?.addTextChangedListener(object : HopWorldTextWatcher {
+        et_signup_password.editText?.addTextChangedListener(object : HopWorldTextWatcher {
             override fun onTextChanged(text: String?) {
                 text?.let {
-                    if ((it.isEmpty() || it.length >= MIN_PASSWORD_CHARACTERS) && et_password.error != null) {
-                        et_password.error = null
-                    } else if (it.length < MIN_PASSWORD_CHARACTERS && et_password.error == null) {
-                        et_password.error = getString(
+                    if ((it.isEmpty() || it.length >= MIN_PASSWORD_CHARACTERS) && et_signup_password.error != null) {
+                        et_signup_password.error = null
+                    } else if (it.length < MIN_PASSWORD_CHARACTERS && et_signup_password.error == null) {
+                        et_signup_password.error = getString(
                             R.string.password_characters_min_error,
                             MIN_PASSWORD_CHARACTERS
                         )
@@ -63,13 +63,13 @@ class SignUpFragment :
             }
         })
 
-        et_email.editText?.addTextChangedListener(object : HopWorldTextWatcher {
+        et_signup_email.editText?.addTextChangedListener(object : HopWorldTextWatcher {
             override fun onTextChanged(text: String?) {
                 text?.let {
-                    if ((it.isEmpty() || it.isEmailValid()) && et_email.error != null) {
-                        et_email.error = null
-                    } else if (!it.isEmailValid() && et_email.error == null) {
-                        et_email.error = getString(R.string.enter_valid_mail_error)
+                    if ((it.isEmpty() || it.isEmailValid()) && et_signup_email.error != null) {
+                        et_signup_email.error = null
+                    } else if (!it.isEmailValid() && et_signup_email.error == null) {
+                        et_signup_email.error = getString(R.string.enter_valid_mail_error)
                     }
                 }
             }
